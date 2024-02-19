@@ -5,13 +5,23 @@ import FullReload from 'vite-plugin-full-reload';
 
 export default defineConfig(({ command }) => {
   return {
+    resolve: {
+      alias: {
+        '/@/': new URL('./src/', import.meta.url).pathname,
+        '@': new URL('./src/', import.meta.url).pathname,
+      },
+    },
     define: {
+      __VUE_OPTIONS_API__: true,
+      __VUE_PROD_DEVTOOLS__: false,
+      'process.env': {
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      },
       [command === 'serve' ? 'global' : '_global']: {},
     },
     root: 'src',
     build: {
       sourcemap: true,
-
       rollupOptions: {
         input: glob.sync('./src/*.html'),
         output: {
@@ -28,3 +38,5 @@ export default defineConfig(({ command }) => {
     plugins: [injectHTML(), FullReload(['./src/**/**.html'])],
   };
 });
+
+
