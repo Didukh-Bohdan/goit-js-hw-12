@@ -1,13 +1,15 @@
-import iziToast from "izitoast";
-import SimpleLightbox from "simplelightbox";
-import "izitoast/dist/css/iziToast.min.css";
-import "simplelightbox/dist/simple-lightbox.min.css";
+
+import iziToast from 'izitoast';
+import SimpleLightbox from 'simplelightbox';
+import 'izitoast/dist/css/iziToast.min.css';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
 const loader = document.getElementById('loader');
 const gallery = document.getElementById('gallery');
 const lightbox = new SimpleLightbox('.gallery a');
+const loadMoreBtn = document.getElementById('loadMoreBtn');
 
-export function renderGallery(images) {
+export function renderGallery(images, isFirstLoad) {
     loader.style.display = 'none';
 
     if (images.length === 0) {
@@ -15,7 +17,12 @@ export function renderGallery(images) {
             title: 'Info',
             message: 'Sorry, there are no images matching your search query. Please try again!'
         });
+        hideLoadMoreButton();
         return;
+    }
+
+    if (isFirstLoad) {
+        showLoadMoreButton();
     }
 
     images.forEach(image => {
@@ -33,6 +40,20 @@ export function renderGallery(images) {
         gallery.appendChild(card);
     });
 
-    // Refresh the lightbox
     lightbox.refresh();
+}
+
+export function hideLoadMoreButton() {
+    loadMoreBtn.style.display = 'none';
+}
+
+export function showLoadMoreButton() {
+    loadMoreBtn.style.display = 'block';
+}
+
+export function showEndOfCollectionMessage() {
+    iziToast.info({
+        title: 'Info',
+        message: "We're sorry, but you've reached the end of search results."
+    });
 }
