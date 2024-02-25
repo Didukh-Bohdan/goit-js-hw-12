@@ -8,7 +8,6 @@ const gallery = document.getElementById('gallery');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 let currentPage = 1;
-const MAX_RESULTS_PER_PAGE = 15;
 
 searchForm.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -26,8 +25,15 @@ searchForm.addEventListener('submit', async function (e) {
     gallery.innerHTML = '';
 
     try {
-        currentPage = 1; 
-        await performSearchAndRender(searchTerm, currentPage);
+        const data = await searchImages(searchTerm, currentPage);
+        renderGallery(data.hits, currentPage === 1);
+
+        if (data.hits.length === 0) {
+            hideLoadMoreButton();
+        } else {
+            showLoadMoreButton();
+            currentPage++;
+        }
     } catch (error) {
         loader.style.display = 'none';
         console.error('Error fetching data:', error);
@@ -38,40 +44,4 @@ searchForm.addEventListener('submit', async function (e) {
     }
 });
 
-loadMoreBtn.addEventListener('click', async () => {
-    try {
-        const searchTerm = searchInput.value.trim();
-        await performSearchAndRender(searchTerm, currentPage);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        iziToast.error({
-            title: 'Error',
-            message: 'An error occurred while fetching more data. Please try again.'
-        });
-    }
-});
-
-async function performSearchAndRender(query, page) {
-    try {
-        const data = await searchImages(query, page, MAX_RESULTS_PER_PAGE);
-
-        const isEndOfCollection = data.totalHits <= page * MAX_RESULTS_PER_PAGE;
-
-        renderGallery(data.hits, page === 1);
-
-        if (data.hits.length === 0 || isEndOfCollection) {
-            hideLoadMoreButton();
-            if (isEndOfCollection) {
-                showEndOfCollectionMessage();
-            }
-        } else {
-            showLoadMoreButton();
-            currentPage++;
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        throw error;
-    } finally {
-        loader.style.display = 'none';
-    }
-}
+loadMoreBtn.addEventListener
