@@ -1,6 +1,5 @@
-import iziToast from 'izitoast'; 
+import { renderGallery, showLoadMoreButton, hideLoadMoreButton, showEndOfCollectionMessage } from './js/render-functions.js';
 import { searchImages } from './js/pixabay-api.js';
-import { renderGallery, showLoadMoreButton, hideLoadMoreButton } from './js/render-functions.js';
 
 const searchForm = document.getElementById('searchForm');
 const searchInput = document.getElementById('searchInput');
@@ -9,6 +8,7 @@ const gallery = document.getElementById('gallery');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 let currentPage = 1;
+const MAX_RESULTS_PER_PAGE = 15;
 
 searchForm.addEventListener('submit', async function (e) {
     e.preventDefault();
@@ -26,15 +26,8 @@ searchForm.addEventListener('submit', async function (e) {
     gallery.innerHTML = '';
 
     try {
-        const data = await searchImages(searchTerm, currentPage);
-        renderGallery(data.hits, currentPage === 1);
-
-        if (data.hits.length === 0) {
-            hideLoadMoreButton();
-        } else {
-            showLoadMoreButton();
-            currentPage++;
-        }
+        currentPage = 1; 
+        await performSearchAndRender(searchTerm, currentPage);
     } catch (error) {
         loader.style.display = 'none';
         console.error('Error fetching data:', error);
@@ -48,14 +41,7 @@ searchForm.addEventListener('submit', async function (e) {
 loadMoreBtn.addEventListener('click', async () => {
     try {
         const searchTerm = searchInput.value.trim();
-        const data = await searchImages(searchTerm, currentPage);
-        renderGallery(data.hits, false);
-
-        if (data.hits.length === 0) {
-            hideLoadMoreButton();
-        } else {
-            currentPage++;
-        }
+        await performSearchAndRender(searchTerm, currentPage);
     } catch (error) {
         console.error('Error fetching data:', error);
         iziToast.error({
@@ -64,3 +50,28 @@ loadMoreBtn.addEventListener('click', async () => {
         });
     }
 });
+
+async function performSearchAndRender(query, page) {
+    try {
+        const data = await searchImages(query, page, MAX_RESULTS_PER_PAGE);
+
+        const isEndOfCollection = data.totalHits <= page * MAX_RESULTS_PER_PAGE;
+
+        renderGallery(data.hits, page === 1);
+
+        if (data.hits.length === 0 || isEndOfCollection) {
+            hideLoadMoreButton();
+            if (isEndOfCollection) {
+                showEndOfCollectionMessage();
+            }
+        } else {
+            showLoadMoreButton();
+            currentPage++;
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+        throw error;
+    } finally {
+        loader.style.display = 'none';
+    }
+}
