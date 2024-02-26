@@ -1,8 +1,4 @@
-import iziToast from 'izitoast';
-import SimpleLightbox from 'simplelightbox';
-import 'izitoast/dist/css/iziToast.min.css';
-import 'simplelightbox/dist/simple-lightbox.min.css';
-import { renderGallery, showLoadMoreButton, hideLoadMoreButton, showEndOfCollectionMessage } from './js/render-functions.js';
+import { renderGallery, hideLoadMoreButton, showLoadMoreButton, showEndOfCollectionMessage } from './js/render-functions.js';
 import { searchImages } from './js/pixabay-api.js';
 
 const searchForm = document.getElementById('searchForm');
@@ -34,11 +30,9 @@ searchForm.addEventListener('submit', async function (e) {
 
         if (data.hits.length === 0) {
             hideLoadMoreButton();
-            showEndOfCollectionMessage();
         } else {
             showLoadMoreButton();
             currentPage++;
-            smoothScrollToGallery();
         }
     } catch (error) {
         loader.style.display = 'none';
@@ -50,10 +44,11 @@ searchForm.addEventListener('submit', async function (e) {
     }
 });
 
-loadMoreBtn.addEventListener('click', async () => {
+loadMoreBtn.addEventListener('click', async function () {
+    loader.style.display = 'block';
+
     try {
-        const searchTerm = searchInput.value.trim();
-        const data = await searchImages(searchTerm, currentPage);
+        const data = await searchImages(searchInput.value.trim(), currentPage);
         renderGallery(data.hits, false);
 
         if (data.hits.length === 0) {
@@ -61,20 +56,15 @@ loadMoreBtn.addEventListener('click', async () => {
             showEndOfCollectionMessage();
         } else {
             currentPage++;
-            smoothScrollToGallery();
         }
     } catch (error) {
-        console.error('Error fetching data:', error);
+        loader.style.display = 'none';
+        console.error('Error fetching more data:', error);
         iziToast.error({
             title: 'Error',
             message: 'An error occurred while fetching more data. Please try again.'
         });
     }
 });
-
-function smoothScrollToGallery() {
-    const cardHeight = document.querySelector('.card').getBoundingClientRect().height;
-    window.scrollBy({ top: cardHeight * 2, behavior: 'smooth' });
-}
 
 loadMoreBtn.addEventListener
