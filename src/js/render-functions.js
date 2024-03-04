@@ -9,7 +9,9 @@ const lightbox = new SimpleLightbox('.gallery a');
 const loadMoreBtn = document.getElementById('loadMoreBtn');
 
 export function renderGallery(images, isFirstLoad) {
-    loader.style.display = 'none';
+    if (isFirstLoad) {
+        loader.style.display = 'none';
+    }
 
     if (images.length === 0) {
         iziToast.info({
@@ -18,10 +20,6 @@ export function renderGallery(images, isFirstLoad) {
         });
         hideLoadMoreButton();
         return;
-    }
-
-    if (isFirstLoad) {
-        showLoadMoreButton();
     }
 
     images.forEach(image => {
