@@ -108,3 +108,27 @@ button:hover {
 #imagelightbox-caption p {
   font-size: 16px;
 }
+
+  .load-more-btn {
+        display: none;
+        margin: 20px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        background-color: #4285f4; /* Використайте колір зі свого загального стилю */
+        color: #fff;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px; /* За бажанням, для скруглення кутів */
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      .load-more-btn:hover {
+        background-color: #2a4d85; /* Змініть колір при наведенні відповідно до свого стилю */
+      }
+
+      #end-message {
+        display: none;
+        margin: 20px 0;
+        font-size: 16px;
+        color: gray;
+      }

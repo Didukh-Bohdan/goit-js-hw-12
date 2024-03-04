@@ -2,8 +2,8 @@ import iziToast from 'izitoast';
 import SimpleLightbox from 'simplelightbox';
 import 'izitoast/dist/css/iziToast.min.css';
 import 'simplelightbox/dist/simple-lightbox.min.css';
-import { renderGallery, showLoadMoreButton, hideLoadMoreButton, showEndOfCollectionMessage } from './js/render-functions.js';
 import { searchImages } from './js/pixabay-api.js';
+import { renderGallery, showLoadMoreButton, hideLoadMoreButton, showEndOfCollectionMessage } from './js/render-functions.js';
 
 const loader = document.getElementById('loader');
 const gallery = document.getElementById('gallery');
@@ -14,6 +14,7 @@ const searchInput = document.getElementById('searchInput');
 
 const LOADER_DISPLAY_BLOCK = 'block';
 const LOADER_DISPLAY_NONE = 'none';
+const PER_PAGE = 15; // Замініть на кількість зображень, яку ви хочете відобразити на сторінці
 
 function setLoaderDisplay(displayValue) {
     loader.style.display = displayValue;
@@ -83,6 +84,11 @@ loadMoreBtn.addEventListener('click', async function () {
             renderGallery(data.hits, false);
             currentPage++;
             smoothScrollToGallery();
+        }
+
+        if (data.totalHits <= currentPage * PER_PAGE) {
+            allResultsFetched = true;
+            hideLoadMoreButton();
         }
     } catch (error) {
         console.error('Error fetching data:', error);
