@@ -114,16 +114,16 @@ button:hover {
         margin: 20px auto;
         padding: 10px 20px;
         font-size: 16px;
-        background-color: #4285f4; /* Використайте колір зі свого загального стилю */
+        background-color: #4285f4; 
         color: #fff;
         border: none;
         cursor: pointer;
-        border-radius: 4px; /* За бажанням, для скруглення кутів */
+        border-radius: 4px;
         transition: background-color 0.3s ease-in-out;
       }
 
       .load-more-btn:hover {
-        background-color: #2a4d85; /* Змініть колір при наведенні відповідно до свого стилю */
+        background-color: #2a4d85; 
       }
 
       #end-message {
