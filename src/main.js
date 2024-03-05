@@ -14,7 +14,7 @@ const searchInput = document.getElementById('searchInput');
 
 const LOADER_DISPLAY_BLOCK = 'block';
 const LOADER_DISPLAY_NONE = 'none';
-const PER_PAGE = 15; // Замініть на кількість зображень, яку ви хочете відобразити на сторінці
+const PER_PAGE = 15; 
 
 function setLoaderDisplay(displayValue) {
     loader.style.display = displayValue;
