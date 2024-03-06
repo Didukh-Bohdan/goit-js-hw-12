@@ -49,7 +49,6 @@ searchForm.addEventListener('submit', async function (e) {
             showEndOfCollectionMessage();
         } else {
             showLoadMoreButton();
-            currentPage++;
             smoothScrollToGallery();
         }
     } catch (error) {
@@ -64,6 +63,7 @@ searchForm.addEventListener('submit', async function (e) {
 });
 
 loadMoreBtn.addEventListener('click', async function () {
+    currentPage++;
     try {
         if (allResultsFetched) {
             hideLoadMoreButton();
@@ -82,7 +82,6 @@ loadMoreBtn.addEventListener('click', async function () {
             showEndOfCollectionMessage();
         } else {
             renderGallery(data.hits, false);
-            currentPage++;
             smoothScrollToGallery();
         }
 
