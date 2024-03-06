@@ -125,10 +125,3 @@ button:hover {
       .load-more-btn:hover {
         background-color: #2a4d85; 
       }
-
-      #end-message {
-        display: none;
-        margin: 20px 0;
-        font-size: 16px;
-        color: gray;
-      }

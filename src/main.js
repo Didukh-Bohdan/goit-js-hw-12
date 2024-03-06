@@ -14,7 +14,7 @@ const searchInput = document.getElementById('searchInput');
 
 const LOADER_DISPLAY_BLOCK = 'block';
 const LOADER_DISPLAY_NONE = 'none';
-const PER_PAGE = 15; 
+const PER_PAGE = 15;
 
 function setLoaderDisplay(displayValue) {
     loader.style.display = displayValue;
@@ -76,7 +76,7 @@ loadMoreBtn.addEventListener('click', async function () {
 
         const data = await searchImages(searchTerm, currentPage);
 
-        if (data.hits.length === 0) {
+        if (!data.hits || data.hits.length === 0) {
             allResultsFetched = true;
             hideLoadMoreButton();
             showEndOfCollectionMessage();
@@ -89,6 +89,7 @@ loadMoreBtn.addEventListener('click', async function () {
         if (data.totalHits <= currentPage * PER_PAGE) {
             allResultsFetched = true;
             hideLoadMoreButton();
+            showEndOfCollectionMessage(); 
         }
     } catch (error) {
         console.error('Error fetching data:', error);
@@ -102,8 +103,10 @@ loadMoreBtn.addEventListener('click', async function () {
 });
 
 function smoothScrollToGallery() {
-    const cardHeight = document.querySelector('.card')?.getBoundingClientRect()?.height;
-    if (cardHeight) {
+    const cards = document.querySelectorAll('.card');
+    
+    if (cards.length > 0) {
+        const cardHeight = cards[0].getBoundingClientRect().height;
         window.scrollBy({ top: cardHeight * 2, behavior: 'smooth' });
     }
 }
